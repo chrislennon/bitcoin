@@ -21,6 +21,26 @@
 
 #include <boost/test/unit_test.hpp>
 
+namespace util_tests {
+    // Create and return temporary subdirectory for test outputs
+    fs::path unit_test_directory(){
+
+        std::string sub_dir = "bitcoin_unit_tests";
+        fs::path dir(fs::temp_directory_path() / sub_dir);
+        fs::path test_dir(dir / std::string(boost::unit_test::framework::current_test_case().p_name));
+
+        if(!fs::exists(dir))
+        {
+            if(!fs::create_directory(dir))
+            {
+               throw std::runtime_error("Error creating the directory\n");
+            }
+        }
+
+        return test_dir;        
+    }
+}
+
 BOOST_FIXTURE_TEST_SUITE(util_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(util_criticalsection)
@@ -714,7 +734,7 @@ static void TestOtherProcess(fs::path dirname, std::string lockname, int fd)
 
 BOOST_AUTO_TEST_CASE(test_LockDirectory)
 {
-    fs::path dirname = fsbridge::unit_test_directory() / fs::unique_path();
+    fs::path dirname = unit_test_directory() ;
     const std::string lockname = ".lock";
 #ifndef WIN32
     // Revert SIGCHLD to default, otherwise boost.test will catch and fail on

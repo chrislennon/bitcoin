@@ -68,7 +68,7 @@ TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(cha
 
         RegisterAllCoreRPCCommands(tableRPC);
         ClearDatadirCache();
-        fs::path pathTemp = fsbridge::unit_test_directory() / strprintf("test_bitcoin_%lu_%i", (unsigned long)GetTime(), (int)(InsecureRandRange(100000)));
+        fs::path pathTemp = util_tests::unit_test_directory();
         fs::create_directories(pathTemp);
         gArgs.ForceSetArg("-datadir", pathTemp.string());
 
